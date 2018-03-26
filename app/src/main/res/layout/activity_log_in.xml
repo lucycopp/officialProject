@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.fyp.LogIn">
+    tools:context="com.example.android.fyp.LogIn"
+    android:orientation="vertical">
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="LOG IN"
-        android:id="@+id/logInButton">
+        android:text="LOG IN AS OPERATOR"
+        android:id="@+id/logInButtonOperator">
+    </Button>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LOG IN AS GUIDE"
+        android:id="@+id/logInButtonGuide">
 
     </Button>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

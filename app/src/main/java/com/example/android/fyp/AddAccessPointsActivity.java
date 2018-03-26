@@ -41,8 +41,6 @@ public class AddAccessPointsActivity extends AppCompatActivity {
 
         new getRoomNamesFromDatabase().execute();
         new scanWifiPoints().execute();
-
-
     }
 
     private class getRoomNamesFromDatabase extends AsyncTask<String, String,String>{
