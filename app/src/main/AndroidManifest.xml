@@ -25,7 +25,10 @@
         <activity android:name=".EditRoomsMenu" />
         <activity android:name=".AddRoomActivity" />
         <activity android:name=".AddAccessPointsActivity" />
-        <activity android:name=".GuideScreen"></activity>
+        <activity android:name=".GuideScreen" />
+        <activity android:name=".KeywordsMenu" />
+        <activity android:name=".AddKeywords" />
+        <activity android:name=".EditKeywords"></activity>
     </application>
 
 </manifest>

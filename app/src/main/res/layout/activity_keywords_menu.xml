@@ -4,21 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.fyp.OperatorScreen">
+    tools:context="com.example.android.fyp.KeywordsMenu"
+    android:orientation="horizontal">
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Rooms"
-        android:id="@+id/editRoomsButton">
-    </Button>
+        android:layout_weight="1"
+        android:text="Add keywords"
+        android:id="@+id/addKeywordsButton"
+        />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Keywords"
-        android:id="@+id/keywordsPageButton">
-    </Button>
-
+        android:layout_weight="1"
+        android:text="Edit keywords"
+        android:id="@+id/editKeywordsButton"/>
 
 </LinearLayout>

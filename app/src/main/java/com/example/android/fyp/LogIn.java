@@ -8,18 +8,28 @@ import android.view.View;
 import android.widget.Button;
 
 public class LogIn extends AppCompatActivity {
-    Button logInButton;
+    Button logInButtonOperator;
+    Button logInButtonGuide;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
-        logInButton = (Button) findViewById(R.id.logInButton);
-        logInButton.setOnClickListener(new View.OnClickListener() {
+        logInButtonOperator = (Button) findViewById(R.id.logInButtonOperator);
+        logInButtonOperator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LogIn.this, OperatorScreen.class));
             }
         });
+
+        logInButtonGuide = (Button) findViewById(R.id.logInButtonGuide);
+        logInButtonGuide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LogIn.this, GuideScreen.class));
+            }
+        });
+
     }
 }

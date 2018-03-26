@@ -51,9 +51,9 @@ public class AddAccessPointsActivity extends AppCompatActivity {
             URL url = JSONUtils.makeURL("http://lcgetdata.azurewebsites.net/getRoomNames.php");
             try {
                 result = JSONUtils.makeHTTPRequest(url);
-                Log.e(LOG_TAG, "addToDatabase:ConnectionSuccess");
+                Log.e(LOG_TAG, "getFromDatabase:ConnectionSuccess");
             } catch (Exception e) {
-                Log.e(LOG_TAG, "addToDatabase:ConnectionFailed " + e.toString());
+                Log.e(LOG_TAG, "getFromDatabase:ConnectionFailed " + e.toString());
             }
             return result;
         }
@@ -79,8 +79,6 @@ public class AddAccessPointsActivity extends AppCompatActivity {
             displayRoomNamesSpinner.setAdapter(adapter);
 
         }
-
-
     }
 
     private class scanWifiPoints extends AsyncTask<String, String, String>{

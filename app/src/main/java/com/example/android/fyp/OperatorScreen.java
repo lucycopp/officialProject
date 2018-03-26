@@ -8,6 +8,7 @@ import android.widget.Button;
 
 public class OperatorScreen extends AppCompatActivity {
 Button editRoomButton;
+Button keywordsPageButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,5 +23,13 @@ Button editRoomButton;
             }
         });
 
+        keywordsPageButton = (Button) findViewById(R.id.keywordsPageButton);
+
+        keywordsPageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(OperatorScreen.this, KeywordsMenu.class));
+            }
+        });
     }
 }
