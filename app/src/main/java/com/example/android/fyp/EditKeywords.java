@@ -1,5 +1,6 @@
 package com.example.android.fyp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +33,7 @@ public class EditKeywords extends AppCompatActivity {
     Map<String, Integer> keywords = new HashMap<String, Integer>();
     Map<String, Integer> rooms = new HashMap<String, Integer>();
     String selectedKeyword = "";
+    Context thisContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class EditKeywords extends AppCompatActivity {
         keywordsList = (ListView) findViewById(R.id.keywordsListView);
         roomsSpinner = (Spinner) findViewById(R.id.roomNamesSpinnerKeywordsEdit);
 
-
+        thisContext = this;
 
         new getRoomNamesFromDatabase().execute();
         roomsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -56,31 +59,38 @@ public class EditKeywords extends AppCompatActivity {
                 //nothing
             }
         });
+
         keywordsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                selectedKeyword = keywordsList.getSelectedItem().toString().trim();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-                builder.setMessage("Would you like to delete this keyword?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
+                selectedKeyword = keywordsList.getItemAtPosition(i).toString();
+                AlertDialog.Builder builder = new AlertDialog.Builder(thisContext);
+
+                builder.setTitle("Confirm");
+                builder.setMessage("Would you like to delete this keyword?");
+
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        new deleteKeyword(keywords.get(selectedKeyword)).execute();
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
     }
-
-    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            switch (which){
-                case DialogInterface.BUTTON_POSITIVE:
-                    new deleteKeyword(keywords.get(selectedKeyword)).execute();
-                    break;
-
-                case DialogInterface.BUTTON_NEGATIVE:
-                    break;
-            }
-        }
-    };
 
     private class getRoomNamesFromDatabase extends AsyncTask<String, String, String> {
 
@@ -187,6 +197,18 @@ public class EditKeywords extends AppCompatActivity {
                 }
                 return result;
             }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+            result = result.replace("<html>", "");
+            if (result == null || result.trim() == "") {
+                Toast.makeText(thisContext, "Unable to delete keyword", Toast.LENGTH_LONG).show();
+            } else if (result.contains("Deleted")){
+                Toast.makeText(thisContext, "Keyword Deleted", Toast.LENGTH_LONG).show();
+                new getRoomNamesFromDatabase().execute();
+            }
         }
+    }
 
 }

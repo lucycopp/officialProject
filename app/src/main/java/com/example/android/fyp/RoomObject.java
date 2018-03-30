@@ -1,22 +1,28 @@
 package com.example.android.fyp;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Created by Lucy on 26/03/2018.
  */
 
 public class RoomObject {
     private String name;
-    private String[] keywords;
+    private String mac;
+    private ArrayList<String> keywords;
     private int time;
 
     public RoomObject(){}
 
     public String Name() { return name; }
-    public String[] Keywords() { return keywords; }
+    public ArrayList<String> Keywords() { return keywords; }
     public int Time() { return time; }
+    public String MAC() { return mac; }
 
     public void setName(String mName) { name = mName; }
-    public void setKeywords(String[] mKeywords) { keywords = mKeywords; }
+    public void setKeywords(ArrayList<String> mKeywords) { keywords = mKeywords; }
     public void setTime (int mTime) { time = mTime; }
+    public void setMac (String mMac) { mac = mMac; }
 
 }

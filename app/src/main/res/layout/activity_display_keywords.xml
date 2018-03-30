@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.fyp.GuideScreen"
+    tools:context="com.example.android.fyp.DisplayKeywords"
     android:orientation="vertical">
-
 
     <TextView
         android:layout_width="match_parent"
@@ -19,10 +18,10 @@
         android:text="START TOUR"
         android:id="@+id/startTourButton"/>
 
-    <Button
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="VIEW KEYWORDS"
-        android:id="@+id/viewKeywordsButton"/>
+        android:id="@+id/currentKeywordsListView">
+    </ListView>
 
 </LinearLayout>

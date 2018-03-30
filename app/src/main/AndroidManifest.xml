@@ -28,7 +28,10 @@
         <activity android:name=".GuideScreen" />
         <activity android:name=".KeywordsMenu" />
         <activity android:name=".AddKeywords" />
-        <activity android:name=".EditKeywords"></activity>
+        <activity
+            android:name=".EditKeywords"
+            android:theme="@style/Theme.AppCompat" />
+        <activity android:name=".DisplayKeywords"></activity>
     </application>
 
 </manifest>
