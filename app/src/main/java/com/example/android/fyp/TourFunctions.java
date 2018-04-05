@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,28 +31,48 @@ public class TourFunctions {
     RoomObject currentRoom = new RoomObject();
     private Context thisContext;
     private TextView displayRoom;
+    private TextView displayTime;
     roomChangedObservable roomChangedBoolean;
     BoolObserver observer = new BoolObserver();
 
 
     Timer timer = new Timer();
 
-    public TourFunctions(Context mContext, TextView mDisplayRoom) {
+    public TourFunctions(Context mContext, TextView mDisplayRoom, TextView mDisplayTime) {
         thisContext = mContext;
         displayRoom = mDisplayRoom;
-
+        displayTime = mDisplayTime;
 
         roomChangedBoolean = new roomChangedObservable(false);
         roomChangedBoolean.addObserver(observer);
     }
 
     public void startLocationSearches() {
-        timer.schedule(new checkLocations(thisContext, currentRoom), 0, 5000);
+        timer.schedule(new checkLocations(thisContext, currentRoom), 0, 2000);
     }
 
     public void roomChanged() {
         displayRoom.setText("CURRENT ROOM: " + currentRoom.Name());
+        displayTime.setText("TIME REMAINING: " + currentRoom.Time());
+        startTimerForRoom();
         roomChangedBoolean.setRoomChanged(false);
+    }
+
+    private void startTimerForRoom(){
+        Scanner scan = new Scanner(System.in);
+        int timet= scan.nextInt() * 60; // Convert to seconds
+        long delay = timet * 1000;
+        try {
+            do {
+                int minutes = timet / 60;
+                int seconds = timet % 60;
+                displayTime.setText(minutes + " minutes(s), " + seconds + " seconds(s)");
+                Thread.sleep(1000);
+                timet = timet - 1;
+                delay = delay - 1000;
+            } while (delay != 0);
+                displayTime.setText("YOU ARE RUNNING BEHIND SCHEDULE");
+        } catch (Exception e){ Log.i(LOG_TAG, e.toString()); }
     }
 
     public void stopLocationSearches() {
@@ -179,7 +200,7 @@ public class TourFunctions {
         @Override
         protected String doInBackground(String... strings) {
             String result = null;
-            URL url = JSONUtils.makeURL("http://http://lcgetdata.azurewebsites.net/searchKeywords.php?ID=" + ID);
+            URL url = JSONUtils.makeURL("http://lcgetdata.azurewebsites.net/searchKeywords.php?ID=" + ID);
             try {
                 result = JSONUtils.makeHTTPRequest(url);
                 Log.e(LOG_TAG, "searchDatabase:ConnectionSuccess");

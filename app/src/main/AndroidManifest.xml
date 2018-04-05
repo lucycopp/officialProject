@@ -31,7 +31,6 @@
         <activity
             android:name=".EditKeywords"
             android:theme="@style/Theme.AppCompat" />
-        <activity android:name=".DisplayKeywords"></activity>
     </application>
 
 </manifest>
