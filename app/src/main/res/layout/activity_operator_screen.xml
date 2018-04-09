@@ -4,21 +4,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.fyp.OperatorScreen">
+    android:orientation="vertical"
+    tools:context="com.example.android.fyp.OperatorScreen"
+    android:background="@color/colorPrimary">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.8"
+        android:textColor="@color/textOnPrimaryColor"
+        android:text="WELCOME!"
+        android:textSize="30sp"
+        />
+    <ImageView
+        android:src="@drawable/ic_map_white_48dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1.3" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Rooms"
+        android:background="@drawable/roundbuttonprimary"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/textOnPrimaryColor"
+        android:layout_width="200sp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.4"
+        android:text="Rooms Menu"
         android:id="@+id/editRoomsButton">
     </Button>
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Keywords"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"/>
+
+    <Button
+        android:layout_width="200sp"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:text="Keywords Menu"
+        android:background="@drawable/roundbuttonprimary"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/textOnPrimaryColor"
+
+        android:layout_gravity="center"
+
         android:id="@+id/keywordsPageButton">
     </Button>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 
 </LinearLayout>

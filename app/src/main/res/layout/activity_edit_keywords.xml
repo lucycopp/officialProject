@@ -5,42 +5,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.fyp.EditKeywords"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorSecondary">
 
-    <LinearLayout
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.5"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/textOnSecondaryColor"
+        android:text="EDIT KEYWORDS"
+        android:paddingTop="30sp"
+        android:textSize="25sp"
+        />
+
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.4"
-            android:text="Select Room"/>
+        android:layout_weight="0.5"
+        android:src="@drawable/ic_format_quote_white_36dp"
+        android:tint="@color/textOnSecondaryColor"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:paddingTop="10sp"
+        android:fontFamily="@font/roboto"
+        android:text="SELECT ROOM"
+        android:textColor="@color/textOnSecondaryColor"/>
 
         <Spinner
             android:id="@+id/roomNamesSpinnerKeywordsEdit"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.35"
+            android:layout_width="200sp"
             android:background="@android:drawable/btn_dropdown"
             android:spinnerMode="dropdown"/>
 
-    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
+        android:cacheColorHint="@color/textOnSecondaryColor"
+        android:layout_weight="1"
         android:id="@+id/keywordsListView"
         android:backgroundTint="@color/colorPrimaryDark"
         ></ListView>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="DELETE KEYWORD"
-        android:id="@+id/deleteKeywordButton"/>
 
 </LinearLayout>

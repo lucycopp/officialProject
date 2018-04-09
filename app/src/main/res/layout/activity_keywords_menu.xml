@@ -5,21 +5,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.fyp.KeywordsMenu"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.4"
+        android:textColor="@color/textOnPrimaryColor"
+        android:text="KEYWORDS MENU"
+        android:textSize="30sp"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1.3"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_format_quote_white_36dp"/>
 
     <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:background="@drawable/roundbuttonprimary"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/textOnPrimaryColor"
+        android:layout_width="200sp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.3"
         android:text="Add keywords"
         android:id="@+id/addKeywordsButton"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"/>
+
+
     <Button
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:background="@drawable/roundbuttonprimary"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/textOnPrimaryColor"
+        android:layout_width="200sp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.3"
         android:text="Edit keywords"
         android:id="@+id/editKeywordsButton"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"/>
+
 
 </LinearLayout>

@@ -86,8 +86,7 @@ public class AddKeywords extends AppCompatActivity {
                     Log.e(LOG_TAG, e.toString());
                 }
             }
-            ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_spinner_item, roomNames);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<String > adapter = new ArrayAdapter<String> (getApplicationContext(), R.layout.spinner_item, roomNames );
             roomNamesSpinner.setAdapter(adapter);
 
         }

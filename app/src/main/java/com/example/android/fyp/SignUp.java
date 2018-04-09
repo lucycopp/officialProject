@@ -36,8 +36,6 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        try{ FirebaseApp.initializeApp(this); }catch (Exception e){}
-
         mAuth = FirebaseAuth.getInstance();
 
         signUpButton = (Button) findViewById(R.id.signUpNewUserButton);

@@ -40,7 +40,6 @@ public class EditKeywords extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_keywords);
 
-        deleteButton = (Button) findViewById(R.id.deleteKeywordButton);
         keywordsList = (ListView) findViewById(R.id.keywordsListView);
         roomsSpinner = (Spinner) findViewById(R.id.roomNamesSpinnerKeywordsEdit);
 
@@ -127,8 +126,7 @@ public class EditKeywords extends AppCompatActivity {
                     Log.e(LOG_TAG, e.toString());
                 }
             }
-            ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_spinner_item, roomNames);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<String> adapter = new ArrayAdapter(getApplicationContext(), R.layout.spinner_item, roomNames);
             roomsSpinner.setAdapter(adapter);
         }
     }

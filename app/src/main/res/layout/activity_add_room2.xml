@@ -5,55 +5,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.fyp.AddRoomActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorSecondary">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:text="ADD NEW ROOM"
+        android:fontFamily="@font/roboto"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/textOnSecondaryColor"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Room Name: ">
-        </TextView>
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/roomNameInsert"/>
-
-    </LinearLayout>
-
-
-    <LinearLayout
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_weight="0.5"
+        android:src="@drawable/ic_navigation_black_24dp"
+        android:layout_marginBottom="20sp"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Room Time: ">
-        </TextView>
+    <EditText
+        android:layout_width="250sp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:id="@+id/roomNameInsert"
+        android:textSize="15sp"
+        android:layout_gravity="center"
+        android:layout_weight="0.5"
+        android:hint="Room Name" />
 
         <EditText
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/roomTimeInsert"/>
-    </LinearLayout>
+            android:layout_width="250sp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:id="@+id/roomTimeInsert"
+            android:textSize="15sp"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:hint="Room Time" />
 
 <Button
-    android:layout_width="match_parent"
+    android:layout_width="200sp"
     android:layout_height="0dp"
-    android:layout_weight="1"
+    android:background="@drawable/roundbuttonsecondary"
+    android:layout_weight="0.3"
+    android:layout_gravity="center"
     android:text="ADD ROOM"
-    android:id="@+id/addRoomToDatabaseButton"/>
+    android:layout_marginTop="20sp"
+    android:id="@+id/addRoomToDatabaseButton"
+    android:layout_marginBottom="50sp"/>
+
+
 
 </LinearLayout>
