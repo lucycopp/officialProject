@@ -38,10 +38,13 @@ Boolean tourOccuring;
                 if (tourOccuring){
                     currentTour.stopLocationSearches();
                     startTourButton.setText("START TOUR");
+                    display.setText("");
+                    displayTime.setText("");
                     tourOccuring = false;
                 }else {
                     currentTour.startLocationSearches();
                     startTourButton.setText("STOP TOUR");
+                    display.setText("Scanning for location...");
                     tourOccuring = true;
                 }
 

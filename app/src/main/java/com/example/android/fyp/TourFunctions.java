@@ -1,6 +1,8 @@
 package com.example.android.fyp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -32,11 +34,14 @@ public class TourFunctions {
     private Context thisContext;
     private TextView displayRoom;
     private TextView displayTime;
+    private startTimerForRoom displayTimeAsyncTask;
+    private checkLocations checkLocationsAsyncTask;
     roomChangedObservable roomChangedBoolean;
     BoolObserver observer = new BoolObserver();
+    private boolean running;
 
 
-    Timer timer = new Timer();
+    Timer timer;
 
     public TourFunctions(Context mContext, TextView mDisplayRoom, TextView mDisplayTime) {
         thisContext = mContext;
@@ -48,36 +53,70 @@ public class TourFunctions {
     }
 
     public void startLocationSearches() {
-        timer.schedule(new checkLocations(thisContext, currentRoom), 0, 2000);
+        timer = new Timer();
+        checkLocationsAsyncTask = new checkLocations(thisContext, currentRoom);
+        timer.schedule(checkLocationsAsyncTask, 0, 2000);
+        running = true;
     }
 
     public void roomChanged() {
-        displayRoom.setText("CURRENT ROOM: " + currentRoom.Name());
-        displayTime.setText("TIME REMAINING: " + currentRoom.Time());
-        startTimerForRoom();
-        roomChangedBoolean.setRoomChanged(false);
+        if (running) {
+            displayRoom.setText("CURRENT ROOM: " + currentRoom.Name());
+            displayTimeAsyncTask = new startTimerForRoom();
+            displayTimeAsyncTask.execute();
+            roomChangedBoolean.setRoomChanged(false);
+        }
     }
 
-    private void startTimerForRoom(){
-        Scanner scan = new Scanner(System.in);
-        int timet= scan.nextInt() * 60; // Convert to seconds
-        long delay = timet * 1000;
-        try {
-            do {
-                int minutes = timet / 60;
-                int seconds = timet % 60;
-                displayTime.setText(minutes + " minutes(s), " + seconds + " seconds(s)");
-                Thread.sleep(1000);
-                timet = timet - 1;
-                delay = delay - 1000;
-            } while (delay != 0);
-                displayTime.setText("YOU ARE RUNNING BEHIND SCHEDULE");
-        } catch (Exception e){ Log.i(LOG_TAG, e.toString()); }
+    private class startTimerForRoom extends  AsyncTask<String, Integer, String> {
+        private volatile boolean running = true;
+
+        @Override
+        protected void onCancelled() {
+            running = false;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            Scanner scan = new Scanner(String.valueOf(currentRoom.Time()));
+            int timet= scan.nextInt(); // Convert to seconds
+            long delay = timet * 1000;
+            try {
+                do {
+                    int minutes = timet / 60;
+                    int seconds = timet % 60;
+                    publishProgress(minutes, seconds);
+                    Thread.sleep(1000);
+                    timet = timet - 1;
+                    delay = delay - 1000;
+                } while (delay != 0 && running);
+            } catch (Exception e){ Log.i(LOG_TAG, e.toString()); }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            displayTime.setText("Time Remaining: " + values[0] + " minutes(s), " + values[1] + " seconds(s)");
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            displayTime.setText("YOU ARE RUNNING BEHIND SCHEDULE");
+        }
     }
+
 
     public void stopLocationSearches() {
-        timer.cancel();
-        timer.purge();
+        try {
+            timer.cancel();
+            timer.purge();
+            displayTimeAsyncTask.cancel(true);
+        } catch (Exception e){
+            Log.i(LOG_TAG, "CANCEL: " + e.toString());
+        } finally {
+            running = false;
+        }
+
     }
 
     public RoomObject Room() {

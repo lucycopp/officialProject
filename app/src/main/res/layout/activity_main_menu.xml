@@ -5,18 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorPrimary"
     tools:context="com.example.android.fyp.MainMenu"
    >
 
     <TextView
         android:layout_width="match_parent"
-       android:layout_height="0dp"
-        android:text="MAIN MENU"
+        android:layout_height="0dp"
+        android:textColor="@color/textOnPrimaryColor"
         android:layout_weight="1"
-        android:textSize="90dp"
-        android:gravity="center_horizontal"
-        />
+        android:fontFamily="@font/roboto"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:lineSpacingExtra="10sp"
+        android:text="Welcome to the OpenTour Guide App!"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:typeface="normal" />
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:src="@drawable/ic_map_white_48dp"/>
 
 
     <LinearLayout
@@ -29,30 +40,36 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.2"/>
+
         <Button
-            android:background="@drawable/roundbutton"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
             android:id="@+id/openLogInPageButton"
-            android:text="LOG IN"
-            />
+            android:layout_width="200sp"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:background="@drawable/roundbuttonprimary"
+            android:gravity="center"
+            android:textColor="@color/textOnPrimaryColor"
+            android:layout_gravity="center"
+            android:fontFamily="@font/roboto"
+            android:text="LOG IN" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.25"/>
+            android:layout_weight="0.04"/>
         <Button
-            android:background="@drawable/roundbutton"
-            android:layout_width="match_parent"
+            android:background="@drawable/roundbuttonprimary"
+            android:layout_width="200sp"
             android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:textColor="@color/textOnPrimaryColor"
             android:id="@+id/openSignUpPageButton"
-            android:layout_weight="1"
+            android:layout_weight="0.1"
             android:text="SIGN UP"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.25"/>
+            android:layout_weight="0.1"/>
 
     </LinearLayout>
 

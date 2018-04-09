@@ -27,6 +27,11 @@ Button signUpButton;
             }
         });
 
-
+        signUpButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainMenu.this, SignUp.class));
+            }
+        });
     }
 }

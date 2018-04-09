@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "898421441582",
+    "firebase_url": "https://tourguidepractise.firebaseio.com",
+    "project_id": "tourguidepractise",
+    "storage_bucket": "tourguidepractise.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898421441582:android:5c9f2e6c9662c850",
+        "android_client_info": {
+          "package_name": "com.example.android.fyp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898421441582-p2chevdnr72un264ddtn998hbremccrm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV6t88IzGTmN5dgx2_rBFuBGN2j3dKWuk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898421441582:android:efedfb6954ec5d09",
+        "android_client_info": {
+          "package_name": "com.example.android.newloginsystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "898421441582-h718ss9o11jq0m6m7f63rimbie4e28a0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.newloginsystem",
+            "certificate_hash": "d3b999120bb92806458319af9f6fc7b076f96ac8"
+          }
+        },
+        {
+          "client_id": "898421441582-p2chevdnr72un264ddtn998hbremccrm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV6t88IzGTmN5dgx2_rBFuBGN2j3dKWuk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "898421441582-p2chevdnr72un264ddtn998hbremccrm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
