@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.android.fyp.ViewCurrentLocations"
+    android:background="@color/colorSecondary">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.3"
+        android:fontFamily="@font/roboto"
+        android:textColor="@color/textOnSecondaryColor"
+        android:text="VIEW GUIDES LOCATIONS"
+        android:paddingTop="30sp"
+        android:textSize="25sp"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:src="@drawable/ic_person_pin_circle_black_24dp"
+        android:tint="@color/textOnSecondaryColor"
+        />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:cacheColorHint="@color/textOnSecondaryColor"
+        android:layout_weight="1"
+        android:id="@+id/currentLocationsListView"
+        android:backgroundTint="@color/colorPrimaryDark"
+        ></ListView>
+
+    <Button
+        android:layout_width="200sp"
+        android:layout_height="0dp"
+        android:background="@drawable/roundbuttonsecondary"
+        android:layout_weight="0.15"
+        android:layout_gravity="center"
+        android:text="REFRESH"
+        android:id="@+id/refreshButton"
+        android:layout_marginTop="25sp"
+        android:layout_marginBottom="50sp"
+        />
+
+</LinearLayout>

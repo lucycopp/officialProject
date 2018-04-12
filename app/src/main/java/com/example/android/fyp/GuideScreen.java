@@ -20,6 +20,7 @@ Button startTourButton, keywordsButton;
 TourFunctions currentTour;
 TextView display, displayTime;
 Boolean tourOccuring;
+User currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +29,12 @@ Boolean tourOccuring;
         startTourButton = (Button) findViewById(R.id.startTourButton);
         display = (TextView) findViewById(R.id.displayRoomName);
         displayTime = (TextView) findViewById(R.id.displayTimeRemaining);
-        currentTour = new TourFunctions(this, display, displayTime);
+
+        currentUser = new User("lucy", 13);
+
+
+
+        currentTour = new TourFunctions(this, display, displayTime, currentUser);
         tourOccuring = false;
 
         startTourButton.setOnClickListener(new View.OnClickListener() {

@@ -34,6 +34,7 @@ public class TourFunctions {
     private Context thisContext;
     private TextView displayRoom;
     private TextView displayTime;
+    private User user;
     private startTimerForRoom displayTimeAsyncTask;
     private checkLocations checkLocationsAsyncTask;
     roomChangedObservable roomChangedBoolean;
@@ -43,10 +44,11 @@ public class TourFunctions {
 
     Timer timer;
 
-    public TourFunctions(Context mContext, TextView mDisplayRoom, TextView mDisplayTime) {
+    public TourFunctions(Context mContext, TextView mDisplayRoom, TextView mDisplayTime, User currentUser) {
         thisContext = mContext;
         displayRoom = mDisplayRoom;
         displayTime = mDisplayTime;
+        user = currentUser;
 
         roomChangedBoolean = new roomChangedObservable(false);
         roomChangedBoolean.addObserver(observer);
@@ -54,7 +56,7 @@ public class TourFunctions {
 
     public void startLocationSearches() {
         timer = new Timer();
-        checkLocationsAsyncTask = new checkLocations(thisContext, currentRoom);
+        checkLocationsAsyncTask = new checkLocations(thisContext, currentRoom, user);
         timer.schedule(checkLocationsAsyncTask, 0, 2000);
         running = true;
     }
@@ -65,6 +67,7 @@ public class TourFunctions {
             displayTimeAsyncTask = new startTimerForRoom();
             displayTimeAsyncTask.execute();
             roomChangedBoolean.setRoomChanged(false);
+            //UPDATE USER ROOM
         }
     }
 
@@ -128,10 +131,12 @@ public class TourFunctions {
     class checkLocations extends TimerTask {
     Context thisContext;
     RoomObject currentRoom;
+    User currentUser;
 
-    public checkLocations(Context mContext, RoomObject mRoom) {
+    public checkLocations(Context mContext, RoomObject mRoom, User mUser) {
         thisContext = mContext;
         currentRoom = mRoom;
+        currentUser = mUser;
     }
 
     public void run() {
@@ -139,7 +144,7 @@ public class TourFunctions {
             String macAddress = new scanWifiPoints(thisContext, currentRoom).execute().get();
             if (macAddress != null && macAddress != currentRoom.MAC()) {
                 try {
-                    new getCurrentRoom(macAddress, currentRoom).execute();
+                    new getCurrentRoom(macAddress, currentRoom, currentUser).execute();
                 } catch (Exception e) {
                 }
             }
@@ -187,10 +192,13 @@ public class TourFunctions {
     public class getCurrentRoom extends AsyncTask<String, String, String> {
         private String MACAddress;
         private RoomObject currentRoom;
+        private User currentUser;
 
-        public getCurrentRoom(String mMACAddress, RoomObject mCurrentRoom) {
+        public getCurrentRoom(String mMACAddress, RoomObject mCurrentRoom, User mUser) {
             MACAddress = mMACAddress;
             currentRoom = mCurrentRoom;
+            currentUser = mUser;
+
         }
 
         @Override
@@ -216,13 +224,39 @@ public class TourFunctions {
                     JSONArray read = new JSONArray(result);
                     JSONObject object = read.getJSONObject(0);
                     Integer id = object.getInt("Location ID");
+                    currentRoom.setID(id);
                     new getCurrentRoomNameandTime(id, currentRoom).execute();
                     new getCurrentRoomKeywords(id, currentRoom).execute();
+                    new updateUserCurrentRoom(id, currentUser).execute();
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, e.toString());
                 }
             }
 
+        }
+    }
+
+    public class updateUserCurrentRoom extends AsyncTask<String, String, String>{
+        private User thisUser;
+        private int ID;
+
+        public updateUserCurrentRoom(int mID, User mUser){
+            thisUser = mUser;
+            ID = mID;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = null;
+            URL url = JSONUtils.makeURL("http://lcgetdata.azurewebsites.net/updateCurrentRoom.php?userID=" + thisUser.getUserID() + "&roomID=" + ID);
+            try {
+                result = JSONUtils.makeHTTPRequest(url);
+                Log.e(LOG_TAG, "searchDatabase:ConnectionSuccess");
+                thisUser.setLocationID(ID);
+            } catch (Exception e) {
+                Log.e(LOG_TAG, "searchDatabase:ConnectionFailed " + e.toString());
+            }
+            return result;
         }
     }
 

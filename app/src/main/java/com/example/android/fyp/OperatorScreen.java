@@ -9,6 +9,7 @@ import android.widget.Button;
 public class OperatorScreen extends AppCompatActivity {
 Button editRoomButton;
 Button keywordsPageButton;
+Button viewCurrentLocationsButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,5 +32,14 @@ Button keywordsPageButton;
                 startActivity(new Intent(OperatorScreen.this, KeywordsMenu.class));
             }
         });
+
+        viewCurrentLocationsButton = (Button) findViewById(R.id.currentLocationsButton);
+        viewCurrentLocationsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(OperatorScreen.this, ViewCurrentLocations.class));
+            }
+        });
+
     }
 }

@@ -29,7 +29,8 @@
         <activity android:name=".KeywordsMenu" />
         <activity android:name=".AddKeywords" />
         <activity android:name=".EditKeywords" />
-        <activity android:name=".SignUp"></activity>
+        <activity android:name=".SignUp" />
+        <activity android:name=".ViewCurrentLocations"></activity>
     </application>
 
 </manifest>
