@@ -3,11 +3,13 @@ package com.example.android.fyp;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -34,7 +36,9 @@ public class TourFunctions {
     private Context thisContext;
     private TextView displayRoom;
     private TextView displayTime;
+    private Button chooseRoomButton;
     private User user;
+    private boolean offlineMode;
     private startTimerForRoom displayTimeAsyncTask;
     private checkLocations checkLocationsAsyncTask;
     roomChangedObservable roomChangedBoolean;
@@ -61,13 +65,32 @@ public class TourFunctions {
         running = true;
     }
 
+    public void setLocationOfflineMode(int roomID){
+        if (offlineMode == true) {
+          currentRoom.setKeywords(new ArrayList<String>());
+          currentRoom.setName(new String());
+          currentRoom.setTime(0);
+          currentRoom.setID(roomID);
+        }
+            new getCurrentRoomKeywords(roomID, currentRoom).execute();
+            new getCurrentRoomNameandTime(roomID, currentRoom).execute();
+            new updateUserCurrentRoom(roomID, user).execute();
+    }
     public void roomChanged() {
         if (running) {
-            displayRoom.setText("CURRENT ROOM: " + currentRoom.Name());
-            displayTimeAsyncTask = new startTimerForRoom();
-            displayTimeAsyncTask.execute();
-            roomChangedBoolean.setRoomChanged(false);
-            //UPDATE USER ROOM
+            if ((currentRoom.MAC() == null || currentRoom.MAC().equals("")) && (currentRoom.Name() == null || currentRoom.Name().equals(""))) {
+                displayRoom.setText("UNABLE TO FIND LOCATION");
+                roomChangedBoolean.setRoomChanged(false);
+                if(displayTimeAsyncTask != null){
+                    //if displaying a timer is running
+                    displayTimeAsyncTask.cancel(true);
+                }
+            } else {
+                displayRoom.setText("CURRENT ROOM: " + currentRoom.Name());
+                displayTimeAsyncTask = new startTimerForRoom();
+                displayTimeAsyncTask.execute();
+                roomChangedBoolean.setRoomChanged(false);
+            }
         }
     }
 
@@ -92,7 +115,7 @@ public class TourFunctions {
                     Thread.sleep(1000);
                     timet = timet - 1;
                     delay = delay - 1000;
-                } while (delay != 0 && running);
+                } while ((delay > 0) && (running == true));
             } catch (Exception e){ Log.i(LOG_TAG, e.toString()); }
             return null;
         }
@@ -105,15 +128,19 @@ public class TourFunctions {
         @Override
         protected void onPostExecute(String s) {
             displayTime.setText("YOU ARE RUNNING BEHIND SCHEDULE");
+            running = false;
         }
     }
 
-
     public void stopLocationSearches() {
         try {
-            timer.cancel();
-            timer.purge();
-            displayTimeAsyncTask.cancel(true);
+            if(timer != null) {
+                timer.cancel();
+                timer.purge();
+            }
+            if(displayTimeAsyncTask != null) {
+                displayTimeAsyncTask.cancel(true);
+            }
         } catch (Exception e){
             Log.i(LOG_TAG, "CANCEL: " + e.toString());
         } finally {
@@ -121,6 +148,8 @@ public class TourFunctions {
         }
 
     }
+
+    public boolean getOfflineMode(){ return offlineMode; }
 
     public RoomObject Room() {
         return currentRoom;
@@ -144,11 +173,19 @@ public class TourFunctions {
             String macAddress = new scanWifiPoints(thisContext, currentRoom).execute().get();
             if (macAddress != null && macAddress != currentRoom.MAC()) {
                 try {
+                    offlineMode = false;
                     new getCurrentRoom(macAddress, currentRoom, currentUser).execute();
                 } catch (Exception e) {
                 }
+            } else if (macAddress == null){
+                currentRoom.setMac(new String());
+                if (!offlineMode) {
+                    roomChangedBoolean.setRoomChanged(true); //room has only changed if its not in offline mode already
+                    offlineMode = true;
+                }
             }
         } catch (Exception e) {
+            Log.i(LOG_TAG, e.toString());
         }
     }
 }
@@ -185,6 +222,7 @@ public class TourFunctions {
             } catch (Exception e) {
                 Log.e(LOG_TAG, e.toString());
             }
+
             return mac;
         }
     }

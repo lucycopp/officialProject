@@ -5,19 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.fyp.GuideScreen"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorSecondary">
 
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/textOnSecondaryColor"
+        android:fontFamily="@font/roboto"
+        android:textSize="16sp"
         android:id="@+id/displayRoomName"/>
 
     <Button
+        android:background="@drawable/roundbuttonsecondary"
         android:layout_width="match_parent"
+        android:textSize="20sp"
         android:layout_height="wrap_content"
         android:text="START TOUR"
-        android:id="@+id/startTourButton"/>
+        android:textColor="@color/textOnSecondaryColor"
+        android:fontFamily="@font/roboto"
+        android:id="@+id/startTourButton"
+        android:layout_marginBottom="10sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,12 +37,14 @@
         <Button
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:background="@drawable/roundbuttonsecondary"
             android:layout_height="wrap_content"
             android:text="VIEW KEYWORDS"
             android:id="@+id/viewKeywordsButton"/>
 
         <Button
             android:layout_width="0dp"
+            android:background="@drawable/roundbuttonsecondary"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="CHOOSE ROOM"
@@ -44,7 +56,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/displayTimeRemaining"/>
+        android:id="@+id/displayTimeRemaining"
+        android:textColor="@color/textOnSecondaryColor"
+        android:fontFamily="@font/roboto"
+        android:textSize="16sp"/>
 
 
     <FrameLayout

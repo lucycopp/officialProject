@@ -21,4 +21,6 @@ public class User {
     public int getLocationID(){ return locationID; }
     public int getUserID() {return UserID; }
     public String getName() {return name; }
+
+
 }
