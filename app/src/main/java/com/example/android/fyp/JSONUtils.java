@@ -15,6 +15,7 @@ import java.nio.charset.Charset;
  */
 
 public class JSONUtils {
+
     public static final String LOG_TAG = JSONUtils.class.getSimpleName();
 
     //This method creates a new URL object from a given string
@@ -40,7 +41,7 @@ public class JSONUtils {
         try {
             urlConnection = (HttpURLConnection) url.openConnection(); //try to open connection
             urlConnection.setReadTimeout(10000);
-            urlConnection.setConnectTimeout(15000);
+            urlConnection.setConnectTimeout(15000); //timeours
             urlConnection.setRequestMethod("GET"); //get request
 
 
@@ -50,7 +51,7 @@ public class JSONUtils {
                 inputStream = urlConnection.getInputStream();
                 response = readFromStream(inputStream); //read the response
             } else {
-                Log.e(LOG_TAG, "RESPONSE CODE " + urlConnection.getResponseCode());
+                Log.e(LOG_TAG, "RESPONSE CODE " + urlConnection.getResponseCode()); //log the response code
             }
         }
             catch (IOException e){
@@ -71,12 +72,12 @@ public class JSONUtils {
     public static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
         if (inputStream != null) {
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8")); //create reader
             BufferedReader reader = new BufferedReader(inputStreamReader);
             String line = reader.readLine();
             while (line != null) {
                 output.append(line);
-                line = reader.readLine();
+                line = reader.readLine(); //create string with input
             }
         }
         return output.toString();

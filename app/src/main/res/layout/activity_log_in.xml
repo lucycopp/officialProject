@@ -5,21 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.android.fyp.LogIn"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorSecondary">
 
-    <Button
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="LOG IN AS OPERATOR"
-        android:id="@+id/logInButtonOperator">
-    </Button>
-
-    <Button
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="LOG IN"
+        android:fontFamily="@font/roboto"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/textOnSecondaryColor"/>
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="LOG IN AS GUIDE"
-        android:id="@+id/logInButtonGuide">
-
-    </Button>
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:src="@drawable/ic_account_circle_black_36dp"
+        android:layout_marginBottom="20sp"/>
+    <EditText
+        android:layout_width="250sp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:id="@+id/emailAddressLogIn"
+        android:textSize="15sp"
+        android:layout_gravity="center"
+        android:layout_weight="0.5"
+        android:hint="Email Address" />
+    <EditText
+        android:layout_width="250sp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:id="@+id/passwordLogIn"
+        android:textSize="15sp"
+        android:layout_gravity="center"
+        android:layout_weight="0.5"
+        android:hint="Password" />
+    <Button
+        android:layout_width="200sp"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:text="LOG IN"
+        android:id="@+id/logInButton"
+        android:background="@drawable/roundbuttonsecondary"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"/>
 
 </LinearLayout>

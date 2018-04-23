@@ -64,16 +64,16 @@ public class SignUp extends AppCompatActivity {
 
 
     private void createNewUserFirebase(String email, String password, final Boolean guide){
-        mAuth.createUserWithEmailAndPassword(email, password)
+        mAuth.createUserWithEmailAndPassword(email, password) //create a new fire base user
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            FirebaseUser user = mAuth.getCurrentUser(); //get the new user
                             successfulFirebase = true;
-                            new AddUserToSQLDatabase(guide).execute(emailInput.getText().toString());
+                            new AddUserToSQLDatabase(guide).execute(emailInput.getText().toString()); //add user to the database
                             password1Input.setText("");
                             emailInput.setText("");
                             password2input.setText("");
@@ -95,20 +95,17 @@ public class SignUp extends AppCompatActivity {
         private AddUserToSQLDatabase(boolean mGuide){
             if (mGuide)
                 guide = 1;
-
         }
-
-
         @Override
         protected String doInBackground(String... args) {
             String name = args[0];
             String jo = null;
-            URL url = JSONUtils.makeURL("http://lcgetdata.azurewebsites.net/addUser.php?email=" + args[0] + "&guide=" + guide);
+            URL url = JSONUtils.makeURL("http://lcgetdata.azurewebsites.net/addUser.php?email=" + args[0] + "&guide=" + guide); //URL to add user
             try {
-                jo = JSONUtils.makeHTTPRequest(url);
+                jo = JSONUtils.makeHTTPRequest(url); //get response from HTTP Request
             } catch (IOException e){
-                Log.i("AddUser", e.toString());
-                Toast.makeText(getApplicationContext(), "ERROR: " + e.toString(), Toast.LENGTH_LONG).show();
+                Log.i("AddUser", e.toString()); //log exception
+                Toast.makeText(getApplicationContext(), "ERROR: " + e.toString(), Toast.LENGTH_LONG).show(); //display exception
             }
             return jo;
             //connect to the web app

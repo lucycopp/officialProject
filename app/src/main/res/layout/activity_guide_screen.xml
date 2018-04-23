@@ -61,6 +61,29 @@
         android:fontFamily="@font/roboto"
         android:textSize="16sp"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/displayMessage"
+        android:textColor="@color/textOnSecondaryColor"
+        android:fontFamily="@font/roboto"
+        android:text="Message: No Message"
+        android:gravity="center"
+        android:textSize="16sp"/>
+
+    <Button
+        android:background="@drawable/roundbuttonsecondary"
+        android:layout_width="120dp"
+        android:textSize="10sp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_height="40dp"
+        android:text="LOG OUT"
+        android:textColor="@color/textOnSecondaryColor"
+        android:fontFamily="@font/roboto"
+        android:id="@+id/logOutButtonGuide"
+        android:layout_marginBottom="10sp"/>
+
 
     <FrameLayout
         android:id="@+id/frameLayoutKeywords"

@@ -57,12 +57,12 @@ public class AddKeywords extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             String result = null;
-            URL url = JSONUtils.makeURL("http://lcgetdata.azurewebsites.net/getRoomNames.php");
+            URL url = JSONUtils.makeURL("http://lcgetdata.azurewebsites.net/getRoomNames.php"); //make URL
             try {
-                result = JSONUtils.makeHTTPRequest(url);
-                Log.e(LOG_TAG, "getFromDatabase:ConnectionSuccess");
+                result = JSONUtils.makeHTTPRequest(url); //get result from HTTP Request
+                Log.e(LOG_TAG, "getFromDatabase:ConnectionSuccess"); //successful
             } catch (Exception e) {
-                Log.e(LOG_TAG, "getFromDatabase:ConnectionFailed " + e.toString());
+                Log.e(LOG_TAG, "getFromDatabase:ConnectionFailed " + e.toString()); //log any exceptions
             }
             return result;
         }
@@ -70,20 +70,20 @@ public class AddKeywords extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             result = result.replace("<html>","");
-            if (result == null || result.trim() == "") { return;}
+            if (result == null || result.trim() == "") { return;} //if no results
             else{
                 try{
-                    JSONArray read = new JSONArray(result);
-                    for (int i = 0; i < read.length(); i++){
-                        JSONObject object = read.getJSONObject(i);
-                        String name = object.getString("Name");
-                        Integer id = object.getInt("Location ID");
+                    JSONArray read = new JSONArray(result);  //get JSON Array
+                    for (int i = 0; i < read.length(); i++){ //iterate through array
+                        JSONObject object = read.getJSONObject(i); //get the JSON object
+                        String name = object.getString("Name"); //get name from object
+                        Integer id = object.getInt("Location ID"); //get ID from object
                         rooms.put(name, id);
-                        roomNames.add(name);
+                        roomNames.add(name); //add to lists
                     }
                 }
                 catch (JSONException e){
-                    Log.e(LOG_TAG, e.toString());
+                    Log.e(LOG_TAG, e.toString()); //log any exceptions
                 }
             }
             ArrayAdapter<String > adapter = new ArrayAdapter<String> (getApplicationContext(), R.layout.spinner_item, roomNames );
@@ -97,14 +97,14 @@ public class AddKeywords extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             String result = null;
-            Integer ID = (Integer) rooms.get(roomNamesSpinner.getSelectedItem().toString());
+            Integer ID = (Integer) rooms.get(roomNamesSpinner.getSelectedItem().toString()); //get the room ID
 
-            URL url = JSONUtils.makeURL("https://lcgetdata.azurewebsites.net/addKeywords.php?ID=" + ID + "&Keyword=" + keywordsEditText.getText());
+            URL url = JSONUtils.makeURL("https://lcgetdata.azurewebsites.net/addKeywords.php?ID=" + ID + "&Keyword=" + keywordsEditText.getText()); //make url with parameters
             try {
-                result = JSONUtils.makeHTTPRequest(url);
-                Log.e(LOG_TAG, "addToDatabase:ConnectionSuccess");
+                result = JSONUtils.makeHTTPRequest(url); //get result from http request
+                Log.e(LOG_TAG, "addToDatabase:ConnectionSuccess"); //successful
             } catch (Exception e) {
-                Log.e(LOG_TAG, "addToDatabase:ConnectionFailed " + e.toString());
+                Log.e(LOG_TAG, "addToDatabase:ConnectionFailed " + e.toString()); //log any exceptions
             }
             return result;
         }
@@ -112,11 +112,11 @@ public class AddKeywords extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             result = result.replace("<html>","");
-            if (result.contains("Added")){
+            if (result.contains("Added")){ //if keyword has been added
                 keywordsEditText.setText("");
-                Toast.makeText(getApplicationContext(), "Keyword added", Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), "Keyword added", Toast.LENGTH_LONG); //tell user keyword has been added
             } else{
-                Toast.makeText(getApplicationContext(), "Unable to add keyword", Toast.LENGTH_LONG);
+                Toast.makeText(getApplicationContext(), "Unable to add keyword", Toast.LENGTH_LONG); //tell user keyword has not been added
             }
 
         }

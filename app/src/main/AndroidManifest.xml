@@ -30,7 +30,24 @@
         <activity android:name=".AddKeywords" />
         <activity android:name=".EditKeywords" />
         <activity android:name=".SignUp" />
-        <activity android:name=".ViewCurrentLocations"></activity>
+        <activity android:name=".ViewCurrentLocations" />
+
+        <!-- [START firebase_service] -->
+        <service
+            android:name=".myFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- [END firebase_service] -->
+        <!-- [START firebase_iid_service] -->
+        <service
+            android:name=".MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <!-- [END firebase_iid_service] -->
     </application>
 
 </manifest>
