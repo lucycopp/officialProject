@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,8 +50,6 @@ public class AddAccessPointsActivity extends AppCompatActivity {
         displayWifiInfoTextView = (TextView) findViewById(R.id.displayWifiInfo);
         addAccessPointButton = (Button) findViewById(R.id.addScannedAccessPointButton);
         scanButton = (Button) findViewById(R.id.scanWifiButton);
-
-
 
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,27 +126,34 @@ public class AddAccessPointsActivity extends AppCompatActivity {
             thisContext = mContext;
         }
 
+        final Comparator<ScanResult> comparator = new Comparator<ScanResult>() {
+            @Override
+            public int compare(ScanResult lhs, ScanResult rhs) {
+                return (rhs.level < lhs.level ? -1 : (lhs.level==rhs.level ? 1 : 0));
+            }
+        };
+
         @Override
         protected String doInBackground(String... strings) {
             try {
-                WifiManager wifi = (WifiManager) thisContext.getSystemService(Context.WIFI_SERVICE);
+                WifiManager wifi = (WifiManager) thisContext.getSystemService(Context.WIFI_SERVICE); //create instance
                 wifi.startScan();
-                List<ScanResult> results = wifi.getScanResults();
+                List<ScanResult> results = wifi.getScanResults(); //put results into list
+                Collections.sort(results, comparator); //sort the list in order of str
 
                 String mac = null;
-                int rssi = 100;
+                int rssi = 0;
 
-                for (ScanResult result : results) {
-                    if (result.SSID.toString().equals("eduroam")) {
-                        if (rssi > Math.abs(result.level)) {
-                            rssi = result.level;
-                            mac = result.BSSID;
-                        }
+                for (int i = 0; i < results.size();i++){
+                    if (!results.get(i).SSID.toString().equals("eduroam")) {
+                        results.remove(results.get(i)); //remove any results which aren't eduroam
                     }
                 }
+                mac = results.get(0).BSSID;
+                rssi = results.get(0).level; //get strongest mac and rssi
                 currentMac = mac;
-                currentRSSI = rssi;
-                display = "MAC: " + mac + " RSSI: " + rssi;
+                currentRSSI = rssi; //set global variables
+                display = "MAC: " + mac + " RSSI: " + rssi; //to output to user
             }
             catch (Exception e){
                 Log.e(LOG_TAG, e.toString());

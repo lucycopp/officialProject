@@ -18,6 +18,8 @@ import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -60,9 +62,9 @@ public class TourFunctions {
 
     public void startLocationSearches() {
         timer = new Timer();
-        checkLocationsAsyncTask = new checkLocations(thisContext, currentRoom, user);
-        timer.schedule(checkLocationsAsyncTask, 0, 2000);
-        running = true;
+        checkLocationsAsyncTask = new checkLocations(thisContext, currentRoom, user); //new instance of task
+        timer.schedule(checkLocationsAsyncTask, 0, 2000);  //timer repeat method every 2 seconds
+        running = true; //tour is now running
     }
 
     public void setLocationOfflineMode(int roomID){
@@ -76,6 +78,7 @@ public class TourFunctions {
             new getCurrentRoomNameandTime(roomID, currentRoom).execute();
             new updateUserCurrentRoom(roomID, user).execute();
     }
+
     public void roomChanged() {
         if (running) {
             if ((currentRoom.MAC() == null || currentRoom.MAC().equals("")) && (currentRoom.Name() == null || currentRoom.Name().equals(""))) {
@@ -105,16 +108,16 @@ public class TourFunctions {
         @Override
         protected String doInBackground(String... strings) {
             Scanner scan = new Scanner(String.valueOf(currentRoom.Time()));
-            int timet= scan.nextInt(); // Convert to seconds
-            long delay = timet * 1000;
+            int timet= scan.nextInt(); // get time
+            long delay = timet * 1000;  //delay of 1 second
             try {
                 do {
-                    int minutes = timet / 60;
-                    int seconds = timet % 60;
-                    publishProgress(minutes, seconds);
-                    Thread.sleep(1000);
-                    timet = timet - 1;
-                    delay = delay - 1000;
+                    int minutes = timet / 60; //get the minutes
+                    int seconds = timet % 60; //get the seconds
+                    publishProgress(minutes, seconds);  //display to user
+                    Thread.sleep(1000);  //sleep one second
+                    timet = timet - 1; //time reduced
+                    delay = delay - 1000; //delay reduced
                 } while ((delay > 0) && (running == true));
             } catch (Exception e){ Log.i(LOG_TAG, e.toString()); }
             return null;
@@ -137,14 +140,14 @@ public class TourFunctions {
             if(timer != null) {
                 timer.cancel();
                 timer.purge();
-            }
+            } //cancel current tour timer
             if(displayTimeAsyncTask != null) {
                 displayTimeAsyncTask.cancel(true);
-            }
+            } //cancel current time timer
         } catch (Exception e){
             Log.i(LOG_TAG, "CANCEL: " + e.toString());
         } finally {
-            running = false;
+            running = false; //no tour running
         }
 
     }
@@ -168,13 +171,14 @@ public class TourFunctions {
         currentUser = mUser;
     }
 
+
     public void run() {
         try {
             String macAddress = new scanWifiPoints(thisContext, currentRoom).execute().get();
             if (macAddress != null && macAddress != currentRoom.MAC()) {
                 try {
-                    offlineMode = false;
-                    new getCurrentRoom(macAddress, currentRoom, currentUser).execute();
+                    offlineMode = false; //now in online mode
+                    new getCurrentRoom(macAddress, currentRoom, currentUser).execute(); //get room details
                 } catch (Exception e) {
                 }
             } else if (macAddress == null){
@@ -199,6 +203,13 @@ public class TourFunctions {
             currentRoom = mCurrentRoom;
         }
 
+        final Comparator<ScanResult> comparator = new Comparator<ScanResult>() {
+            @Override
+            public int compare(ScanResult lhs, ScanResult rhs) {
+                return (rhs.level < lhs.level ? -1 : (lhs.level==rhs.level ? 1 : 0));
+            }
+        };
+        //https://stackoverflow.com/questions/17285337/how-can-i-sort-the-a-list-of-getscanresults-based-on-signal-strength-in-ascend
         @Override
         protected String doInBackground(String... strings) {
             String mac = null;
@@ -206,18 +217,16 @@ public class TourFunctions {
                 WifiManager wifi = (WifiManager) thisContext.getSystemService(Context.WIFI_SERVICE);
                 wifi.startScan();
                 List<ScanResult> results = wifi.getScanResults();
+                Collections.sort(results, comparator);
 
 
-                int rssi = 100;
 
-                for (ScanResult result : results) {
-                    if (result.SSID.toString().equals("eduroam")) {
-                        if (rssi > Math.abs(result.level)) {
-                            rssi = result.level;
-                            mac = result.BSSID;
-                        }
+                for (int i = 0; i < results.size();i++){
+                    if (!results.get(i).SSID.toString().equals("eduroam")) {
+                        results.remove(results.get(i)); //remove any results which aren't eduroam
                     }
                 }
+                mac = results.get(0).BSSID;
 
             } catch (Exception e) {
                 Log.e(LOG_TAG, e.toString());
@@ -256,16 +265,16 @@ public class TourFunctions {
         protected void onPostExecute(String result) {
             result = result.replace("<html>", "");
             if (result == null || result.trim() == "") {
-                roomChangedBoolean.setRoomChanged(true);
+                roomChangedBoolean.setRoomChanged(true); //room has changed to null
             } else {
                 try {
                     JSONArray read = new JSONArray(result);
                     JSONObject object = read.getJSONObject(0);
                     Integer id = object.getInt("Location ID");
-                    currentRoom.setID(id);
-                    new getCurrentRoomNameandTime(id, currentRoom).execute();
-                    new getCurrentRoomKeywords(id, currentRoom).execute();
-                    new updateUserCurrentRoom(id, currentUser).execute();
+                    currentRoom.setID(id); //change current rooms ID
+                    new getCurrentRoomNameandTime(id, currentRoom).execute(); //get room name and time
+                    new getCurrentRoomKeywords(id, currentRoom).execute(); //get keywords
+                    new updateUserCurrentRoom(id, currentUser).execute(); //update user
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, e.toString());
                 }

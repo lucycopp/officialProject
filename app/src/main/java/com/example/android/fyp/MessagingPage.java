@@ -41,7 +41,7 @@ public class MessagingPage extends AppCompatActivity {
             public void onClick(View view) {
                 if (messageInput.getText() != null) {
                     try {
-                        new sendMessage(messageInput.getText().toString(), MyFirebaseInstanceIDService.getToken()).execute();
+                        new sendMessage(messageInput.getText().toString()).execute();
                     } catch (Exception e) {
                         Toast.makeText(getApplicationContext(), "Unable to send message", Toast.LENGTH_LONG).show();
                     }
@@ -61,33 +61,31 @@ public class MessagingPage extends AppCompatActivity {
     private class sendMessage extends AsyncTask<String, String, String> {
         String LEGACY_SERVER_KEY = "AIzaSyCXFhviZuSwgDpLMj5z3P6gz1L9AmruuUY";
         String message;
-        String regToken;
 
-        private sendMessage(String mMessage, String mToken){
+        private sendMessage(String mMessage){
             message = mMessage;
-            regToken = mToken;
         }
 
         @Override
         protected String doInBackground(String... strings) {
             String responseCode = null;
             try {
-                OkHttpClient client = new OkHttpClient();
+                OkHttpClient client = new OkHttpClient(); //create new client
                 JSONObject json = new JSONObject();
-                JSONObject dataJson = new JSONObject();
-                dataJson.put("body", message);
-                dataJson.put("title", "Message");
-                json.put("notification", dataJson);
-                json.put("to", "/topics/all");
-                RequestBody body = RequestBody.create(JSON, json.toString());
+                JSONObject dataJson = new JSONObject(); //make new JSON objects
+                dataJson.put("body", message); //put inputted message as body
+                dataJson.put("title", "Message"); //title is message
+                json.put("notification", dataJson); //nest data as notification value
+                json.put("to", "/topics/all"); //send to those subscribed to all topic
+                RequestBody body = RequestBody.create(JSON, json.toString()); //create request
                 Request request = new Request.Builder()
-                        .header("Authorization", "key=" + LEGACY_SERVER_KEY)
-                        .url("https://fcm.googleapis.com/fcm/send")
-                        .post(body)
+                        .header("Authorization", "key=" + LEGACY_SERVER_KEY) //add legacy key to the header
+                        .url("https://fcm.googleapis.com/fcm/send") //URL which handles requests
+                        .post(body) //put body into request
                         .build();
-                Response response = client.newCall(request).execute();
-                String finalResponse = response.body().string();
-                responseCode = String.valueOf(response.code());
+                Response response = client.newCall(request).execute(); //send request and get reponse
+                String finalResponse = response.body().string(); //get body of response
+                responseCode = String.valueOf(response.code()); //get response key
             } catch (Exception e) {
                 Log.d("SENDING MESSAGE", e.toString());
             }
@@ -97,7 +95,7 @@ public class MessagingPage extends AppCompatActivity {
         @Override
         protected void onPostExecute(String response) {
             if (response != null) {
-                if (response.equals("200")) {
+                if (response.equals("200")) { //if response is OK
                     Toast.makeText(getApplicationContext(), "Message Sent", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "Message Failed to Send", Toast.LENGTH_SHORT).show();

@@ -55,17 +55,15 @@ public class GuideScreen extends AppCompatActivity {
     private BroadcastReceiver activityReciever = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            displayMessage = (TextView) findViewById(R.id.displayMessage);
-            Bundle bundle = intent.getBundleExtra("msg");
-            DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+            displayMessage = (TextView) findViewById(R.id.displayMessage); //get the textview
+            Bundle bundle = intent.getBundleExtra("msg");  //get the message
+            DateFormat dateFormat = new SimpleDateFormat("HH:mm");  //create format
             Calendar cal = Calendar.getInstance();
-            dateFormat.setTimeZone(cal.getTimeZone());
-            Date date = new Date();
-            displayMessage.setText("[" + dateFormat.format(date) + "] " + bundle.getString("msgBody"));
+            dateFormat.setTimeZone(cal.getTimeZone()); //get timezone of phone
+            Date date = new Date(); //new date
+            displayMessage.setText("[" + dateFormat.format(date) + "] " + bundle.getString("msgBody")); //output message
         }
     };
-
-
 
 
     @Override
@@ -136,17 +134,10 @@ public class GuideScreen extends AppCompatActivity {
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut(); //sign out of firebase service
                 new updateUserCurrentRoom(0, currentUser); //set users current location to 0
-                startActivity(new Intent(GuideScreen.this, MainMenu.class)); //open main menu
+
             }
         });
     }
-
-//    public void messageRecieved() {
-//        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-//        Date date = new Date();
-//        displayMessage.setText(incomingMessage + dateFormat.format(date));
-//
-//    }
 
 
     public class updateUserCurrentRoom extends AsyncTask<String, String, String>{
