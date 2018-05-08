@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.icu.util.VersionInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,7 +47,6 @@ import static com.example.android.fyp.JSONUtils.LOG_TAG;
 public class GuideScreen extends AppCompatActivity {
     Button startTourButton, keywordsButton, chooseRoomButton, logOutButton;
     TourFunctions currentTour;
-    public static String incomingMessage;
     TextView display, displayTime, displayMessage;
     Boolean tourOccuring;
     User currentUser;
@@ -113,7 +113,11 @@ public class GuideScreen extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (currentTour.getOfflineMode()) {
-                    new getRoomNamesFromDatabase().execute();
+                    if(roomMap.size() == 0) {
+                        new getRoomNamesFromDatabase().execute();
+                    } else {
+                        openChooseRoomFragment();
+                    }
                 }
             }
         });
@@ -132,9 +136,16 @@ public class GuideScreen extends AppCompatActivity {
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut(); //sign out of firebase service
-                new updateUserCurrentRoom(0, currentUser); //set users current location to 0
-
+                try {
+                    FirebaseAuth.getInstance().signOut(); //sign out of firebase service
+                    if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
+                        new updateUserCurrentRoom(0, currentUser).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR); //set users current location to 0
+                    } else {
+                        new updateUserCurrentRoom(0, currentUser).execute(); //set users current location to 0
+                    }
+                } catch(Exception e){
+                    Log.i(LOG_TAG, e.toString());
+                }
             }
         });
     }
@@ -183,7 +194,7 @@ public class GuideScreen extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             String result = null;
-            if (roomMap.size() == 0) {
+
                 URL url = JSONUtils.makeURL("http://lcgetdata.azurewebsites.net/getRoomNames.php");
                 try {
                     result = JSONUtils.makeHTTPRequest(url);
@@ -191,13 +202,12 @@ public class GuideScreen extends AppCompatActivity {
                 } catch (Exception e) {
                     Log.e(LOG_TAG, "getFromDatabase:ConnectionFailed " + e.toString());
                 }
-            }
+
             return result;
         }
 
         @Override
         protected void onPostExecute(String result) {
-            if (roomMap.size() == 0) {
                 ArrayList<String> roomNames = new ArrayList<>();
                 result = result.replace("<html>", "");
                 if (result == null || result.trim() == "") {
@@ -209,21 +219,25 @@ public class GuideScreen extends AppCompatActivity {
                             JSONObject object = read.getJSONObject(i);
                             roomMap.put(object.getInt("Location ID"), object.getString("Name"));
                         }
+                        openChooseRoomFragment();
                     } catch (JSONException e) {
                         Log.e(LOG_TAG, e.toString());
                     }
-                }
+
             }
 
-            Bundle bundle = new Bundle();
-            RoomsFragment frag = new RoomsFragment();
-            frag.passData(currentTour, roomMap);
-            frag.setArguments(bundle);
-            loadFragment(frag);
+
         }
     }
 
 
+    private void openChooseRoomFragment(){
+        Bundle bundle = new Bundle();
+        RoomsFragment frag = new RoomsFragment();
+        frag.passData(currentTour, roomMap);
+        frag.setArguments(bundle);
+        loadFragment(frag);
+    }
     }
 
 

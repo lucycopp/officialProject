@@ -62,7 +62,7 @@ public class ViewCurrentLocations extends AppCompatActivity {
             String result = null;
             URL url = JSONUtils.makeURL("http://lcgetdata.azurewebsites.net/getRoomNames.php");
             try {
-                result = JSONUtils.makeHTTPRequest(url);
+                result = JSONUtils.makeHTTPRequest(url); //make request
                 Log.e(LOG_TAG, "getFromDatabase:ConnectionSuccess");
             } catch (Exception e) {
                 Log.e(LOG_TAG, "getFromDatabase:ConnectionFailed " + e.toString());
@@ -81,11 +81,11 @@ public class ViewCurrentLocations extends AppCompatActivity {
                         JSONArray read = new JSONArray(result);
                         for (int i = 0; i < read.length(); i++) {
                             JSONObject object = read.getJSONObject(i);
-                            String name = object.getString("Name");
-                            Integer id = object.getInt("Location ID");
-                            rooms.put(id, name);
+                            String name = object.getString("Name"); //extract name
+                            Integer id = object.getInt("Location ID"); //extract id
+                            rooms.put(id, name); //add to global hash map
                         }
-                        new getUsers().execute();
+                        new getUsers().execute(); //get users
 
                     } catch (JSONException e) {
                         Log.e(LOG_TAG, e.toString());
@@ -101,7 +101,7 @@ public class ViewCurrentLocations extends AppCompatActivity {
             String result = null;
             URL url = JSONUtils.makeURL("http://lcgetdata.azurewebsites.net/getUsers.php");
             try {
-                result = JSONUtils.makeHTTPRequest(url);
+                result = JSONUtils.makeHTTPRequest(url); //make request
                 Log.e(LOG_TAG, "getFromDatabase:ConnectionSuccess");
             } catch (Exception e) {
                 Log.e(LOG_TAG, "getFromDatabase:ConnectionFailed " + e.toString());
@@ -122,14 +122,14 @@ public class ViewCurrentLocations extends AppCompatActivity {
                         boolean guide = object.getBoolean("Guide");
                         if(guide) {
                             String name = object.getString("Email");
-                            name = name.split("@")[0];
+                            name = name.split("@")[0]; //username will be first part of email
                             Integer userID = object.getInt("User ID");
                             Integer roomID = object.getInt("Location ID");
-                            User newUser = new User(name, userID);
-                            newUser.setLocationID(roomID);
-                            allUsers.add(newUser);
+                            User newUser = new User(name, userID); //create new user
+                            newUser.setLocationID(roomID); //add room id
+                            allUsers.add(newUser); //add all users to global list
                         }
-                        displayToUser();
+                        displayToUser(); //display to user
                     }
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, e.toString());
@@ -141,7 +141,7 @@ public class ViewCurrentLocations extends AppCompatActivity {
     public void displayToUser(){
         ArrayList<String> output = new ArrayList<>();
         for(int i = 0; i < allUsers.size(); i++){
-            if(allUsers.get(i).getLocationID() == 0){
+            if(allUsers.get(i).getLocationID() == 0){ //if no location
                 output.add("ID: " + allUsers.get(i).getUserID() + " Name: " + allUsers.get(i).getName() + " OFFLINE");
             } else {
                 output.add("ID: " + allUsers.get(i).getUserID() + " Name: " + allUsers.get(i).getName() + " Location: " + rooms.get(allUsers.get(i).getLocationID()));

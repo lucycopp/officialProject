@@ -31,6 +31,7 @@
         <activity android:name=".EditKeywords" />
         <activity android:name=".SignUp" />
         <activity android:name=".ViewCurrentLocations" />
+        <activity android:name=".MessagingPage"/>
 
         <!-- [START firebase_service] -->
         <service

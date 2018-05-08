@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,6 +47,9 @@ public class TourFunctions {
     roomChangedObservable roomChangedBoolean;
     BoolObserver observer = new BoolObserver();
     private boolean running;
+    private getCurrentRoomKeywords offlineGetCurrentKeywords;
+    private getCurrentRoomNameandTime offlineGetRoomNameandTime;
+    private updateUserCurrentRoom offlineUpdateUser;
 
 
     Timer timer;
@@ -69,14 +73,28 @@ public class TourFunctions {
 
     public void setLocationOfflineMode(int roomID){
         if (offlineMode == true) {
-          currentRoom.setKeywords(new ArrayList<String>());
-          currentRoom.setName(new String());
-          currentRoom.setTime(0);
-          currentRoom.setID(roomID);
+            currentRoom.setKeywords(new ArrayList<String>());
+            currentRoom.setName(new String());
+            currentRoom.setTime(0);
+            currentRoom.setID(roomID);
+
+            try {
+                if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
+                    new getCurrentRoomKeywords(roomID, currentRoom).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new getCurrentRoomNameandTime(roomID, currentRoom).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new updateUserCurrentRoom(roomID, user).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+                else {
+                    new getCurrentRoomKeywords(roomID, currentRoom).execute();
+                    new getCurrentRoomNameandTime(roomID, currentRoom).execute();
+                    new updateUserCurrentRoom(roomID, user).execute();
+                }
+
+            } catch (Exception e) {
+                Log.i(LOG_TAG, e.toString());
+            }
         }
-            new getCurrentRoomKeywords(roomID, currentRoom).execute();
-            new getCurrentRoomNameandTime(roomID, currentRoom).execute();
-            new updateUserCurrentRoom(roomID, user).execute();
+
     }
 
     public void roomChanged() {
@@ -90,8 +108,18 @@ public class TourFunctions {
                 }
             } else {
                 displayRoom.setText("CURRENT ROOM: " + currentRoom.Name());
+                if(displayTimeAsyncTask != null){
+                    //if displaying a timer is running
+                    displayTimeAsyncTask.cancel(true);
+                }
                 displayTimeAsyncTask = new startTimerForRoom();
-                displayTimeAsyncTask.execute();
+
+                if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) { //if newer build version
+                   displayTimeAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                   displayTimeAsyncTask.execute();
+                }
+
                 roomChangedBoolean.setRoomChanged(false);
             }
         }
@@ -174,12 +202,25 @@ public class TourFunctions {
 
     public void run() {
         try {
-            String macAddress = new scanWifiPoints(thisContext, currentRoom).execute().get();
+            String macAddress = null;
+            if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
+                macAddress = new scanWifiPoints(thisContext, currentRoom).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get(); //set users current location to 0
+            } else {
+                macAddress = new scanWifiPoints(thisContext, currentRoom).execute().get();
+            }
+
             if (macAddress != null && macAddress != currentRoom.MAC()) {
                 try {
                     offlineMode = false; //now in online mode
-                    new getCurrentRoom(macAddress, currentRoom, currentUser).execute(); //get room details
+
+                    if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
+                        new getCurrentRoom(macAddress, currentRoom, currentUser).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR); //get room details
+                    } else {
+                        new getCurrentRoom(macAddress, currentRoom, currentUser).execute(); //get room details
+                    }
+
                 } catch (Exception e) {
+                    Log.i(LOG_TAG, e.toString());
                 }
             } else if (macAddress == null){
                 currentRoom.setMac(new String());
@@ -220,13 +261,14 @@ public class TourFunctions {
                 Collections.sort(results, comparator);
 
 
-
-                for (int i = 0; i < results.size();i++){
-                    if (!results.get(i).SSID.toString().equals("eduroam")) {
-                        results.remove(results.get(i)); //remove any results which aren't eduroam
+                if(results.size() > 0) {
+                    for (int i = 0; i < results.size(); i++) {
+                        if (!results.get(i).SSID.toString().equals("eduroam")) {
+                            results.remove(results.get(i)); //remove any results which aren't eduroam
+                        }
                     }
+                    mac = results.get(0).BSSID;
                 }
-                mac = results.get(0).BSSID;
 
             } catch (Exception e) {
                 Log.e(LOG_TAG, e.toString());
@@ -271,10 +313,18 @@ public class TourFunctions {
                     JSONArray read = new JSONArray(result);
                     JSONObject object = read.getJSONObject(0);
                     Integer id = object.getInt("Location ID");
-                    currentRoom.setID(id); //change current rooms ID
-                    new getCurrentRoomNameandTime(id, currentRoom).execute(); //get room name and time
-                    new getCurrentRoomKeywords(id, currentRoom).execute(); //get keywords
-                    new updateUserCurrentRoom(id, currentUser).execute(); //update user
+                    if(id != currentRoom.ID()) {
+                        currentRoom.setID(id); //change current rooms ID
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                            new getCurrentRoomNameandTime(id, currentRoom).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            new getCurrentRoomKeywords(id, currentRoom).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                            new updateUserCurrentRoom(id, currentUser).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        } else {
+                            new getCurrentRoomNameandTime(id, currentRoom).execute(); //get room name and time
+                            new getCurrentRoomKeywords(id, currentRoom).execute(); //get keywords
+                            new updateUserCurrentRoom(id, currentUser).execute(); //update user
+                        }
+                    }
                 } catch (JSONException e) {
                     Log.e(LOG_TAG, e.toString());
                 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,21 +55,35 @@ public class AddAccessPointsActivity extends AppCompatActivity {
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new scanWifiPoints(currentContext).execute();
+                if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
+                    new scanWifiPoints(currentContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    new scanWifiPoints(currentContext).execute();
+                }
             }
         });
 
         addAccessPointButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new addAccessPoint(displayRoomNamesSpinner.getSelectedItem().toString().trim(), currentContext).execute();
+                if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
+                    new addAccessPoint(displayRoomNamesSpinner.getSelectedItem().toString().trim(), currentContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    new addAccessPoint(displayRoomNamesSpinner.getSelectedItem().toString().trim(), currentContext).execute();
+                }
             }
         });
 
 
         try {
-            new getRoomNamesFromDatabase(currentContext).execute();
-            new scanWifiPoints(currentContext).execute();
+            if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB) {
+                new getRoomNamesFromDatabase(currentContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new scanWifiPoints(currentContext).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                new getRoomNamesFromDatabase(currentContext).execute();
+                new scanWifiPoints(currentContext).execute();
+            }
+
         } catch (Exception e) {
             Log.i(LOG_TAG, "AddAccessPointsStartUp" + e.toString());
             Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
@@ -198,7 +213,7 @@ public class AddAccessPointsActivity extends AppCompatActivity {
                 displayWifiInfoTextView.setText("");
                 Toast.makeText(thisContext, "Access Point added", Toast.LENGTH_LONG).show();
             } else{
-                Toast.makeText(thisContext, "Unable to add Access Point", Toast.LENGTH_LONG).show();
+                Toast.makeText(thisContext, "MAC address already exists", Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -33,9 +33,6 @@ public class MessagingPage extends AppCompatActivity {
 
         messageInput = findViewById(R.id.messageEditText);
         sendButton = findViewById(R.id.sendMessageButton);
-
-
-        FirebaseMessaging.getInstance().subscribeToTopic("all");
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
